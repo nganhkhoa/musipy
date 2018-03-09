@@ -17,6 +17,9 @@ class musipy:
         if self.parser.mode == 'sort':
             self.collect()
             self.move_files()
+        elif self.parser.mode == 'playlist':
+            self.collect()
+            self.playlist()
         else:
             pass
         return
@@ -63,6 +66,41 @@ class musipy:
                 else:
                     os.rename(track, new_file)
             print("")
+        return
+
+    def playlist(self):
+        print("Create playlist name {}".format(self.parser.playlistname))
+        pl_file = self.parser.source + '/' + self.parser.playlistname + '.m3u'
+        mode = 'w'
+
+        while os.path.exists(pl_file):
+            rewrite = input('Playlist existed, rewrite?(y/n) ')
+            if rewrite == 'y':
+                break
+            newname = input("New file name: ")
+            pl_file = self.parser.source + '/' + newname + '.m3u'
+            # return
+
+        playlist = open(pl_file, mode)
+        playlist.write('#EXTM3U\n')
+
+        for key, musics in self.data.items():
+            for music in musics:
+                tag = TinyTag.get(music)
+                if tag.artist is None:
+                    tag.artist = ''
+                if tag.title is None:
+                    tag.title = ''
+                tag.duration = int(tag.duration)
+                # write comment
+                playlist.write('#EXTINF:{},{} - {}\n'
+                               .format(tag.duration, tag.artist, tag.title))
+                # change special char to hex
+                # TODO
+                # write file direction
+                playlist.write('file//{}\n'.format(music))
+
+        print("{} created".format(pl_file))
         return
 
     # collect all files and store in self.data

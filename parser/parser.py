@@ -11,10 +11,12 @@ class Parser():
         self.attr = None
         self.mode = None
 
+        self.playlistname = None
+
         try:
             opts, args = getopt.getopt(
-                argv, 'hs:o:a:m:',
-                ['source=', 'output=', 'attribute=', 'mode='])
+                argv, 'hs:o:a:m:pln:',
+                ['source=', 'output=', 'attribute=', 'mode=', 'playlistname='])
 
         except getopt.GetoptError:
             print('')
@@ -32,6 +34,8 @@ class Parser():
                 self.attr = arg
             elif opt in ('-m', '--mode'):
                 self.mode = arg
+            elif opt in ('-pl', '--playlistname'):
+                self.playlistname = arg
             else:
                 print("Unknown flag {} {}".format(opt, arg))
 
@@ -43,6 +47,10 @@ class Parser():
             self.attr = 'album'
         if self.mode is None:
             self.mode = 'sort'
+
+        if self.mode == 'playlist' and self.playlistname is None:
+            print("No play list name")
+            exit()
 
 
 if __name__ == '__main__':

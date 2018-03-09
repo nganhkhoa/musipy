@@ -2,6 +2,7 @@ import os
 from parser import Parser
 from common import same_name_alert, get_content
 from tinytag import TinyTag
+from binascii import b2a_hex
 
 
 class musipy:
@@ -105,14 +106,21 @@ class musipy:
                     elif hex_c == ord(' '):
                         chars[i] = '%20'
                     else:
-                        chars[i] = '%{}'.format(hex(hex_c)[2:])
+                        u = b2a_hex(chars[i].encode('utf-8')).decode('utf-8')
+                        u = list(u)
+                        for j in range(len(u)):
+                            u[j] = u[j].upper()
+                            if j % 2 != 0:
+                                continue
+                            u[j] = '%' + u[j]
+                        chars[i] = "".join(u)
                         # print("Cannot find this character: 0x{}"
                         #       .format(hex(hex_c)))
                         # exit(-1)
 
                 music = "".join(chars)
                 # write file direction
-                playlist.write('file//{}\n'.format(music))
+                playlist.write('file://{}\n'.format(music))
 
         print("{} created".format(pl_file))
         return

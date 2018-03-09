@@ -96,7 +96,21 @@ class musipy:
                 playlist.write('#EXTINF:{},{} - {}\n'
                                .format(tag.duration, tag.artist, tag.title))
                 # change special char to hex
-                # TODO
+                chars = list(music)
+                for i in range(len(music)):
+                    hex_c = ord(chars[i])
+                    if hex_c >= ord('!') and hex_c <= ord('~'):
+                        # if in range of ascii characters
+                        continue
+                    elif hex_c == ord(' '):
+                        chars[i] = '%20'
+                    else:
+                        chars[i] = '%{}'.format(hex(hex_c)[2:])
+                        # print("Cannot find this character: 0x{}"
+                        #       .format(hex(hex_c)))
+                        # exit(-1)
+
+                music = "".join(chars)
                 # write file direction
                 playlist.write('file//{}\n'.format(music))
 

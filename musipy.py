@@ -11,6 +11,11 @@ class musipy:
         self.data = {}
         self.parser = Parser()
 
+        print(self.parser.source)
+        print(self.parser.output)
+        print(self.parser.mode)
+        print(self.parser.attr)
+
         # run
         self.run()
 
@@ -71,7 +76,7 @@ class musipy:
 
     def playlist(self):
         print("Create playlist name {}".format(self.parser.playlistname))
-        pl_file = self.parser.source + '/' + self.parser.playlistname + '.m3u'
+        pl_file = self.parser.output + '/' + self.parser.playlistname + '.m3u'
         mode = 'w'
 
         while os.path.exists(pl_file):
@@ -79,7 +84,7 @@ class musipy:
             if rewrite == 'y':
                 break
             newname = input("New file name: ")
-            pl_file = self.parser.source + '/' + newname + '.m3u'
+            pl_file = self.parser.output + '/' + newname + '.m3u'
             # return
 
         playlist = open(pl_file, mode)
